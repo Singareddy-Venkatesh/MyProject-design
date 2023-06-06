@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 I am preparing for devops course in hyderbad
 I got a job as devops engineer in banglore 
+=======
+I am preparing for devops course
+>>>>>>> 3778ab0acddda1f5ea1eeedf47fef284180fda2c
