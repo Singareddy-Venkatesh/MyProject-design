@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    parameters{
+        choice(
+            choices:['YES','No'],
+            description:'depoly to tomcat?'
+            name:'DEPLOY_Dev'
+            )
+            choices:['YES','NO'],
+            description:'depoly to tomcat?'
+            name:'Depoly_Test'
+            )
+            choices:['YES','NO'],
+            description:'depoly to tomcat?'
+            name:'Depoly_Pre-Prod'
+            )
+            choices:['YES','NO'],
+            description:'depoly to tomcat?'
+            name:'Depoly_Prod'
+            )
+    }
+    Stages{
+        stage('clone'){
+            steps{
+                https://github.com/Singareddy-Venkatesh/MyProject-design.git
+            }
+        }
+        stage('Tomcat-Dev'){
+            steps{
+                deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
+            }
+        }
+        stage('Tomcat-Test'){
+            steps{
+                Input 'Do you want to depoly an application into Tomcat Test'
+                deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
+            }
+        }
+        stage('Tomcat-Pre-pod'){
+            steps{
+                Input 'Do you want to depoly an application into Tomcat PREPROD'
+                deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
+            }
+        }
+        stage('Tomcat-Prod'){
+            steps{
+                Input 'Do you want to depoly an application into Tomcat PROD'
+                deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
+            }
+        }
+    }
+}
+ 
