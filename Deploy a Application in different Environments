@@ -2,52 +2,55 @@ pipeline {
     agent any
     parameters{
         choice(
-            choices:['YES','No'],
-            description:'depoly to tomcat?'
-            name:'DEPLOY_Dev'
-            )
             choices:['YES','NO'],
-            description:'depoly to tomcat?'
-            name:'Depoly_Test'
+            description:'deploy to tomcat?', name:'DEPLOY_DEV'
             )
+        choice(
             choices:['YES','NO'],
-            description:'depoly to tomcat?'
-            name:'Depoly_Pre-Prod'
+            description:'deploy to tomcat?', name:'DEPLOY_TEST'
             )
+        choice(
             choices:['YES','NO'],
-            description:'depoly to tomcat?'
-            name:'Depoly_Prod'
+            description:'deploy to tomcat?', name:'DEPLOY_PRE-PROD'
             )
-    }
-    Stages{
-        stage('clone'){
-            steps{
-                https://github.com/Singareddy-Venkatesh/MyProject-design.git
+        choice(
+            choices:['YES','NO'],
+            description:'deploy to tomcat?', name:'DEPLOY_PROD'
+            )
+        }
+        stages{
+            stage('clone'){
+                steps{
+                    git 'https://github.com/Singareddy-Venkatesh/MyProject-design.git'
+                }
+            }
+            stage('build'){ 
+                steps{
+                    sh 'mvn package'
+                }
+            }
+            stage('tomcat-dev'){
+                steps{
+                    deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
+                }
+            }
+            stage('tomcat-test'){
+                steps{
+                    input 'do you want to deploy an application into tomcat test'
+                    deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
             }
         }
-        stage('Tomcat-Dev'){
-            steps{
-                deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
+            stage('tomcat-preprod'){
+                steps{
+                    input 'do you want to deploy an application into tomcat preprod'
+                    deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war' 
             }
         }
-        stage('Tomcat-Test'){
-            steps{
-                Input 'Do you want to depoly an application into Tomcat Test'
-                deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
-            }
-        }
-        stage('Tomcat-Pre-pod'){
-            steps{
-                Input 'Do you want to depoly an application into Tomcat PREPROD'
-                deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
-            }
-        }
-        stage('Tomcat-Prod'){
-            steps{
-                Input 'Do you want to depoly an application into Tomcat PROD'
-                deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
+            stage('tomcat-prod'){
+                steps{
+                    input 'do you want to deploy an application into tomcat prod'
+                    deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'https://3.91.215.185:8080')], contextPath: null, war: '**/*.war'
             }
         }
     }
 }
- 
